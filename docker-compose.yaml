@@ -1,0 +1,9 @@
+version: '3.3'
+services:
+  mongo:
+    image: mongo:5.0.2-focal
+    restart: always
+    volumes:
+     - ./docker/mongo/db:/data/db
+    ports: 
+      - 27017:27017
