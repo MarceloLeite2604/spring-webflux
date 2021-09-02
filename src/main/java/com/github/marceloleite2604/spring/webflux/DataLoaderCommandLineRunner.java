@@ -7,21 +7,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
-import reactor.core.scheduler.Schedulers;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 @Component
 @Slf4j
 @RequiredArgsConstructor
 public class DataLoaderCommandLineRunner implements CommandLineRunner {
 
-    private static final long REQUIRED_PERSONS_ON_DATABASE = 1000L;
+    private static final long REQUIRED_PERSONS_ON_DATABASE = 20_000L;
 
-    private static final long MAX_PERSONS_PER_REQUEST = 16L;
+    private static final long MAX_PERSONS_PER_REQUEST = 32L;
 
     private final PersonService personService;
 
@@ -51,8 +48,11 @@ public class DataLoaderCommandLineRunner implements CommandLineRunner {
 
         Flux.fromIterable(amountPerRequest)
                 .flatMap(randomUserService::retrieve)
-                .doOnNext(personService::save)
-                .doOnComplete(() -> log.info("{} persons added on database.", amount))
+                .flatMap(personService::save)
+                .doOnComplete(() ->
+                        personService.count()
+                                .subscribe(totalPersons ->
+                                        log.info("{} persons added. We have a total of {} persons on database.", amount, totalPersons)))
                 .doOnError(throwable -> log.error("Error while fetching users", throwable))
                 .subscribe();
     }

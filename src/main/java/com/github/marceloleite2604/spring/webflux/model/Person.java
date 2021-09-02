@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
@@ -13,10 +14,10 @@ import java.util.UUID;
 
 @Document
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
+@Getter
 public class Person {
 
     @Id
