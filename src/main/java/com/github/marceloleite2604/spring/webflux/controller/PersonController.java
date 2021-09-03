@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
+import java.time.Duration;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(PersonController.BASE_PATH)
@@ -20,6 +22,7 @@ public class PersonController {
 
     @GetMapping(produces = MediaType.APPLICATION_NDJSON_VALUE)
     private Flux<Person> get() {
-        return personService.retrieveAll();
+        return personService.retrieveAll()
+                .delayElements(Duration.ofSeconds(1));
     }
 }
