@@ -23,6 +23,7 @@ public class PersonController {
     @GetMapping(produces = MediaType.APPLICATION_NDJSON_VALUE)
     private Flux<Person> get() {
         return personService.retrieveAll()
-                .delayElements(Duration.ofSeconds(1));
+                // Uncomment this code to receive a slower data through stream.
+                /*.delayElements(Duration.ofSeconds(1))*/;
     }
 }
